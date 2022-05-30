@@ -1,0 +1,5 @@
+# Directory to store all earning statements
+earning_statements/
+
+# Any vscode stuff
+.vscode/
