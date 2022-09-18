@@ -1,5 +1,5 @@
-# Directory to store all earning statements
-earning_statements/
+# Database directory where all jsons go
+db/
 
 # Any vscode stuff
 .vscode/
