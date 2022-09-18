@@ -3,3 +3,6 @@ db/
 
 # Any vscode stuff
 .vscode/
+
+# Any caches
+__pycache__
