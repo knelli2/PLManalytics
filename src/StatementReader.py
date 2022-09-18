@@ -74,7 +74,8 @@ def generate_global_df_unorganized(statement_directory):
 
 # Organizes a DataFrame from generate_global_df_unorganized with multiple
 # indices defined by the master index and secondary index defined at the top of
-# this file
+# this file. Inspired by this stack overflow post:
+# https://stackoverflow.com/questions/52923685/convert-pandas-multiindex-series-to-json-python
 def organize_df(unorganized_df):
     group1 = (
         # This line creates a DF object where the entries are grouped first by
