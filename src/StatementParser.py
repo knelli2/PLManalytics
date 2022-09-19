@@ -1,8 +1,10 @@
 from glob import glob
 import sys
-from tkinter import W
+import os
 import pandas as pd
 import json
+import Utilities as UT
+import VersionChecker as VC
 
 # Identifies each image uniquely
 master_index = "Asset Number"
@@ -50,13 +52,16 @@ converters = {
 # Actually reads all the earning statements and concats them into one large
 # DataFrame
 def generate_global_df_unorganized(statement_directory):
-    statement_files = glob(statement_directory + "*.txt")
+    all_files_path = os.path.join(statement_directory, "*.txt")
+    statement_files = glob(all_files_path)
 
     if not len(statement_files) > 0:
         sys.exit(
-            "There are no statement files to read. Check that you have a"
-            " directory named 'earning_statements' in the root directory of the"
-            " repository that holds all the earning statements.")
+            f"There are no statement files in the {statement_directory} to "
+            "read. Check that you have a directory named "
+            "'raw_earning_statements' in the `db` directory in the root of the"
+            " repository. This directory holds all the txt earning statements."
+        )
 
     df_list = [
         pd.read_csv(
@@ -104,7 +109,8 @@ def organize_df(unorganized_df):
 
 # Takes an organized DataFrame and writes it a json file. If pretty==True, will
 # print everything with indents so it is human readable. If not, then it's just
-# the default output of json.dump()
+# the default output of json.dump(). When a file is written, a version file is
+# also written
 def write_df_to_json(df, filename, pretty=False):
     outfile = open(filename, "w+")
 
@@ -135,14 +141,20 @@ def write_df_to_json(df, filename, pretty=False):
 
     outfile.close()
 
+    out_dir = UT.get_directory(filename)
+    VC.write_version(out_dir)
+
 
 # Read in all earning statements from the given directory and write then to a
 # json file with the given name. If pretty==True, will print everything with
 # indents so it is human readable. If not, then it's just the default output of
-# json.dump()
+# json.dump(). If the version file hasn't changed, then don't recompute anything
 def parse_and_write_earning_statements(statement_directory,
                                        outfile_name,
                                        pretty=False):
+    if not VC.has_version_changed(statement_directory):
+        return
+
     unorganized_df = generate_global_df_unorganized(statement_directory)
 
     organized_df = organize_df(unorganized_df)
