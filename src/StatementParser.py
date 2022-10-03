@@ -24,11 +24,17 @@ other_columns = [
     "Customer Name",
     "Alternate Asset Number",
     "Asset Description",
+    "Rights: Industry",
+    "Rights Usage",
     "Sales Territory",
     "License Fee in USD",
     "Royalty Rate",
     "Gross Royalty in USD",
     "Royalty Pay Date",
+    "Contributors Net payment (summary for full stmt)",
+    "StatementSummary_US_NetPayment",
+    "StatementSummary_US_NetPaymentInCurrency",
+    "StatementSummary_NonUS_NetPaymentInCurrency"
 ]
 
 # All columns. Indices plus data
