@@ -4,5 +4,8 @@ db/
 # Any vscode stuff
 .vscode/
 
+# Secrets (like Mongo username and password)
+.secrets
+
 # Any caches
 __pycache__
