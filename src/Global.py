@@ -15,3 +15,6 @@ CLEAN_STATEMENT_DIR = os.path.join(DB_DIR, "clean_earning_statements")
 CLEAN_STATEMENT_DB = os.path.join(CLEAN_STATEMENT_DIR, "db.json")
 
 SECRETS_FILE = os.path.join(ROOT_DIR, ".secrets")
+
+IMAGE_DB="Images"
+IMAGE_COLL="Images"
