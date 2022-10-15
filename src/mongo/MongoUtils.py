@@ -1,7 +1,10 @@
-import pymongo
-import sys
 import os
+import sys
+
+import pymongo
+
 from src.Global import SECRETS_FILE
+
 
 def get_client():
   if not os.path.exists(SECRETS_FILE):

@@ -1,10 +1,10 @@
-from doctest import master
-from glob import glob
-import sys
-import os
-import pandas as pd
 import json
-from Global import RAW_STATEMENT_DIR
+import os
+import sys
+from glob import glob
+
+import pandas as pd
+
 import Utilities as UT
 import VersionChecker as VC
 
