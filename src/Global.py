@@ -18,3 +18,4 @@ SECRETS_FILE = os.path.join(ROOT_DIR, ".secrets")
 
 IMAGE_DB="Images"
 IMAGE_COLL="Images"
+STATEMENT_COLL="Statements"
