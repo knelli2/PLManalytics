@@ -1,8 +1,10 @@
+from doctest import master
 from glob import glob
 import sys
 import os
 import pandas as pd
 import json
+from Global import RAW_STATEMENT_DIR
 import Utilities as UT
 import VersionChecker as VC
 
@@ -35,6 +37,30 @@ other_columns = [
     "StatementSummary_US_NetPayment",
     "StatementSummary_US_NetPaymentInCurrency",
     "StatementSummary_NonUS_NetPaymentInCurrency"
+]
+
+column_types = [
+    str,
+    int,
+    int,
+    str,
+    str,
+    str,
+    str,
+    str,
+    str,
+    str,
+    str,
+    str,
+    str,
+    float,
+    float,
+    float,
+    str,
+    float,
+    float,
+    float,
+    float
 ]
 
 # All columns. Indices plus data
@@ -166,3 +192,40 @@ def parse_and_write_earning_statements(statement_directory,
     organized_df = organize_df(unorganized_df)
 
     write_df_to_json(organized_df, outfile_name, pretty)
+
+
+def read_earning_statement(statement_file):
+    images = []
+
+    with open(statement_file, "r", encoding='utf-8-sig') as f:
+        columns = f.readline().strip().split("\t")
+        past_header = False
+        for line in f.readlines():
+            if not past_header:
+                past_header = True
+                continue
+
+            data = line.split("\t")
+
+            id_idx = columns.index(master_index)
+            invoice_idx = columns.index(secondary_index)
+
+            invoice_info = {}
+            invoice_info[secondary_index] = data[invoice_idx]
+            for value,func in zip(other_columns, column_types):
+                idx = columns.index(value)
+                invoice_info[value] = func(data[idx])
+                if func == float and invoice_info[value] < 0.0:
+                    invoice_info[value] *= -1.0
+
+            image_id = data[id_idx]
+            image_exists_idx = next(
+                (i
+                 for i, item in enumerate(images) if item["_id"] == image_id),
+                None)
+            if image_exists_idx == None:
+                images.append({"_id": image_id, "purchases": [invoice_info]})
+            else:
+                images[image_exists_idx]["purchases"].append(invoice_info)
+
+    return images
