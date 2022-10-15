@@ -1,3 +1,4 @@
+import datetime as dt
 import json
 import os
 import sys
@@ -7,6 +8,7 @@ import pandas as pd
 
 import Utilities as UT
 import VersionChecker as VC
+from src.Global import RAW_STATEMENT_DIR
 
 # Identifies each image uniquely
 master_index = "Asset Number"
@@ -176,6 +178,12 @@ def write_df_to_json(df, filename, pretty=False):
     out_dir = UT.get_directory(filename)
     VC.write_version(out_dir)
 
+# Expects the statement files to be named /path/to/YYYYMM-*.txt
+def get_year_month_from_statement_file(statement_file):
+    raw_str = statement_file.split("/")[-1].split("-")[0]
+    result = dt.datetime.strptime(raw_str, "%Y%m").strftime("%Y-%b")
+    return result
+
 
 # Read in all earning statements from the given directory and write then to a
 # json file with the given name. If pretty==True, will print everything with
@@ -194,8 +202,12 @@ def parse_and_write_earning_statements(statement_directory,
     write_df_to_json(organized_df, outfile_name, pretty)
 
 
+# Returns a list of dictionaries where the "_id" of each dict is the image id
+# and there is one entry "purchases" which has a list of dicts corresponding to
+# every time that image was sold
 def read_earning_statement(statement_file):
     images = []
+    royalty_month = get_year_month_from_statement_file(f)
 
     with open(statement_file, "r", encoding='utf-8-sig') as f:
         columns = f.readline().strip().split("\t")
@@ -217,6 +229,9 @@ def read_earning_statement(statement_file):
                 invoice_info[value] = func(data[idx])
                 if func == float and invoice_info[value] < 0.0:
                     invoice_info[value] *= -1.0
+            
+            # Reset "Royalty Month" to be a consistent format
+            invoice_info["Royalty Month"] = royalty_month
 
             image_id = data[id_idx]
             image_exists_idx = next(
