@@ -1,6 +1,6 @@
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = Path(SRC_DIR).parents[0]
@@ -18,3 +18,4 @@ SECRETS_FILE = os.path.join(ROOT_DIR, ".secrets")
 
 IMAGE_DB="Images"
 IMAGE_COLL="Images"
+STATEMENT_COLL="Statements"

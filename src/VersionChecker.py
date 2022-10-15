@@ -1,7 +1,8 @@
-from pathlib import Path
-from Global import *
-import os
 import json
+import os
+from pathlib import Path
+
+from Global import *
 
 
 # Get the path to the name of the version file in a certain directory
